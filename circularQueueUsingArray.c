@@ -1,78 +1,77 @@
 #include<stdio.h>
-#include<stdlib.h>
-struct node {
-    int data;
-    struct node *next;
-};
-struct node * front = 0;
-struct node * rear = 0;
+#define N 5
+int queue[N];
+int front = -1;
+int rear = -1;
 void enqueue()
 {
     int x;
     printf("enter data: ");
     scanf("%d",&x);
-    struct node *newnode;
-    newnode = (struct node *)(malloc (sizeof(struct node)));
-    newnode->data = x;
-    newnode->next = 0 ;
-    if(front==0 && rear==0)
+    if(front==-1 && rear==-1)
     {
-        front=rear= newnode;
+        front=rear = 0;
+        queue[rear] = x;
     }
-    else
+    else if ((rear+1)%N == front)
     {
-        rear->next = newnode;
-        rear = newnode;
-    }
-}
-
-void display()
-{
-    struct node *temp;
-    if(front==0 && rear==0)
-    {
-        printf("queue is empty");
+        printf("overflow");
     }
     else{
-        temp = front;
-        while(temp != 0)
-        {
-            printf("element of queue is %d\n",temp->data);
-            temp = temp->next;
-        }
+        rear = (rear +1)%N;
+        queue[rear] = x;
     }
 }
 
 void dequeue()
 {
-    struct node *temp;
-    temp = front ;
-    if(front == 0 && rear == 0)
+    if(front==-1 && rear==-1)
     {
-        printf("underflow");
+        printf("queue is empty");
+    }
+    else if(front==rear)
+    {
+        front=rear=-1;
+    }
+    else
+    {
+        printf("dequeued element is %d",queue[front]);
+        front=(front+1)%N;
+    }
+}
+
+void display()
+{
+    int i=front;
+    if(front==-1 && rear==-1)
+    {
+        printf("queue is empty");
     }
     else{
-        printf("dequeued element is %d",front->data);
-        front= front->next;
-        free(temp);
+        printf("queue is : ");
+        while (i!=rear)
+        {
+            printf("%d\n",queue[i]);  
+            i = (i+1)%N; 
+        }
+        printf("%d\n",queue[rear]);
     }
 }
 
 void peek()
 {
-    if(front==0 && rear==0)
+    if(front== -1 && rear == -1)
     {
         printf("queue is empty");
     }
-    else
-    {
-        printf("peek is %d",front->data);
+    else{
+        printf("peek : %d",queue[front]);
     }
 }
 
 void main()
 {
-int choice =0;
+    int choice =0;
     while(choice!=5){
     printf("\nchoose one from the below\n");
     printf("\n1.enqueue\n2.dequeue\n3.display\n4.peek\n5.exit\n");
